@@ -1,4 +1,4 @@
-module fileservice
+module go-tui-file-project
 
 go 1.20
 

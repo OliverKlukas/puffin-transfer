@@ -18,4 +18,4 @@
 internal/.idea
 internal/fileservice/.idea
 internal/fileservice/fileservice
-internal/fileservice/testfile.txt
+tests/testfile.txt
