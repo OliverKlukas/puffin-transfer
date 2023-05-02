@@ -27,12 +27,10 @@ func main() {
 	}
 
 	// Run Firestore in the background.
-	cmdChan := make(chan string)
-	filepathChan := make(chan string)
-	errorChan := make(chan error)
-	go firestore.Run(cmdChan, filepathChan, errorChan)
+	firestoreInputChan := make(chan string)
+	go firestore.Run(firestoreInputChan)
 
-	// Start the command loop
+	// Start the command loop.
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("> ")
@@ -44,34 +42,24 @@ func main() {
 			continue
 		}
 
-		if strings.HasPrefix(input, "store") {
+		switch {
+		case strings.HasPrefix(input, "store"):
+			// handle "store" command
 			parts := strings.Fields(input)
 			if len(parts) != 3 {
 				fmt.Println("Usage: store <transfer|retrieve> <filepath>")
 				continue
 			}
-
-			if parts[1] == "transfer" {
-				filepathChan <- parts[2]
-				err := <-errorChan
-				if err != nil {
-					fmt.Println("Failed to transfer file:", err)
-				} else {
-					fmt.Println("File transferred successfully")
-				}
-			} else if parts[1] == "retrieve" {
-				filepathChan <- parts[2]
-				err := <-errorChan
-				if err != nil {
-					fmt.Println("Failed to retrieve file:", err)
-				} else {
-					fmt.Println("File transferred successfully")
-				}
-			} else {
-				fmt.Println("Usage: store <transfer|retrieve> <filepath>")
-			}
-		} else {
-			fmt.Println("Invalid command")
+			firestoreInputChan <- strings.Join(parts[1:], " ")
+		case strings.HasPrefix(input, "help"):
+			// handle "help" command
+			fmt.Println("Available commands:")
+			fmt.Println("\thelp\t\t\t\t\tPrints this help message")
+			fmt.Println("\tstore <command> <filepath>\t\tTransfer or retrieve a file from store")
+		default:
+			// handle invalid command
+			fmt.Println("Invalid command!")
+			fmt.Println("Type 'help' to see available commands.")
 		}
 	}
 }

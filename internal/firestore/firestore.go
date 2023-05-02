@@ -7,6 +7,7 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"os"
+	"strings"
 )
 
 var client *firestore.Client
@@ -58,28 +59,33 @@ func Retrieve(filepath string) (string, error) {
 	}
 }
 
-func Run(input chan string, out chan string) {
+func Run(inputChan chan string) {
 	for {
 		select {
-		case cmd := <-input:
-			if cmd == "transfer" {
-				filepath := <-filepathChan
-				err := Transfer(filepath)
-				errorChan <- err
-			} else if cmd == "retrieve" {
-				filepath := <-filepathChan
-				content, err := Retrieve(filepath)
-				if err != nil {
-					errorChan <- err
-				} else {
-					fmt.Println(content)
-					errorChan <- nil
-				}
-			} else {
-				errorChan <- fmt.Errorf("invalid command: %s", cmd)
+		case cmd := <-inputChan:
+			parts := strings.Split(cmd, " ")
+			if len(parts) < 2 {
+				fmt.Println("Invalid command!")
+				fmt.Println("Usage: store <transfer|retrieve> <filepath>")
+				continue
 			}
-		default:
-			// Do nothing and wait for new commands
+			switch parts[0] {
+			case "transfer":
+				err := Transfer(parts[1])
+				if err != nil {
+					fmt.Printf("Error transferring file: %v\n", err)
+				}
+			case "retrieve":
+				content, err := Retrieve(parts[1])
+				if err != nil {
+					fmt.Printf("Error retrieving file: %v\n", err)
+				} else {
+					fmt.Printf("File content: %s\n", content)
+				}
+			default:
+				fmt.Println("Invalid command!")
+				fmt.Println("Usage: store <transfer|retrieve> <filepath>")
+			}
 		}
 	}
 }

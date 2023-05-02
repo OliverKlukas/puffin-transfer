@@ -26,6 +26,10 @@ func createConfigFile() (Config, error) {
 	if err != nil {
 		return config, err
 	}
+	_, err = reader.ReadString('\n')
+	if err != nil {
+		return config, err
+	}
 
 	switch choice {
 	case 1:
@@ -37,7 +41,7 @@ func createConfigFile() (Config, error) {
 		if err != nil {
 			return config, err
 		}
-		config.FirestoreProjectID = projectID[:len(projectID)-1] // remove newline character
+		config.FirestoreProjectID = projectID[:len(projectID)-1]
 
 		// Prompt user for service account key file location
 		fmt.Print("Enter service account authentication key JSON file location: ")
@@ -45,14 +49,14 @@ func createConfigFile() (Config, error) {
 		if err != nil {
 			return config, err
 		}
-		config.FirestoreCredentialsFile = keyFileLocation[:len(keyFileLocation)-1] // remove newline character
+		config.FirestoreCredentialsFile = keyFileLocation[:len(keyFileLocation)-1]
 	default:
 		fmt.Println("Invalid choice. Please choose a valid option.")
 		return createConfigFile()
 	}
 
 	// Write config to file
-	file, err := os.Create("config.json")
+	file, err := os.Create("config/config.json")
 	if err != nil {
 		return config, err
 	}
@@ -83,7 +87,7 @@ func LoadConfig() (Config, error) {
 	config := Config{}
 
 	// Check if config file exists
-	if _, err := os.Stat("config.json"); os.IsNotExist(err) {
+	if _, err := os.Stat("config/config.json"); os.IsNotExist(err) {
 		// Config file does not exist, create it
 		newConfig, err := createConfigFile()
 		if err != nil {
@@ -92,7 +96,7 @@ func LoadConfig() (Config, error) {
 		config = newConfig
 	} else {
 		// Config file exists, load it
-		file, err := os.Open("config.json")
+		file, err := os.Open("config/config.json")
 		if err != nil {
 			return config, err
 		}
