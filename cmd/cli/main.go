@@ -67,6 +67,9 @@ func main() {
 			fmt.Println("\tstore <command> <filepath>\t\tTransfer or retrieve a file from store")
 			fmt.Println("\tautotransfer <filepath> <command>\tAnalyzes all files in a directory and transfers them to store if they match a rule")
 			fmt.Println("\t\t\t\t\t\tPossible commands are: 'duplicate' to find duplicate files and 'size <size>' to find files larger than <size>")
+		case strings.HasPrefix(input, "quit") || strings.HasPrefix(input, "exit"):
+			// handle "quit" or "exit" command
+			os.Exit(0)
 		default:
 			// handle invalid command
 			fmt.Println("Invalid command!")
