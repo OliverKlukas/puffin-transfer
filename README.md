@@ -1,8 +1,24 @@
-# go-tui-file-project aka _puffin transfer_
+# Puffin Transfer
+A reverese engineered iCloud solution for Unix systems written in Golang. Automatically rotates unused, unwanted and unnecessary files out of your system into a cloud of your choice. WIP
+
+## Dependencies
+- [Golang](https://go.dev/doc/install): ^1.20.4
+- Access to cloud system of your choice, i.e. [GCP - Firestore](https://cloud.google.com)
 
 ## Build instructions
-1. Build the binary with `go build -o puffin-transfer cmd/cli/main.go`
-2. Run the binary with `./puffin-transfer`
+1. Retrieve the repository
+  ```shell
+  git clone https://github.com/OliverKlukas/puffin-transfer.git
+  cd puffin-transfer
+  ```
+3. Build the binary with
+  ```shell 
+  go build -o puffin-transfer cmd/cli/main.go
+  ```
+3. Run the binary with 
+  ```shell
+  ./puffin-transfer
+  ```
 
 ## Project structure
 
