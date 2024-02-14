@@ -1,5 +1,5 @@
 # Puffin Transfer
-A reverese engineered iCloud solution for Unix systems written in Golang. Automatically rotates unused, unwanted and unnecessary files out of your system into a cloud of your choice. WIP
+A reverese engineered iCloud solution for Unix systems written in Golang. Goal is to automatically rotate unused, unwanted and unnecessary files out of your system into a cloud of your choice. Current state supports rotation of identified files into a GCP firestore instance upon command. WIP - use with caution.
 
 ## Dependencies
 - [Golang](https://go.dev/doc/install): ^1.20.4
